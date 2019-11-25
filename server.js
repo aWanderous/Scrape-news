@@ -25,7 +25,7 @@ app.use(express.json());
 app.use(express.static("public"));
 
 // Connect to the Mongo DB
-mongoose.connect("mongodb://localhost/sportsFeed", {
+mongoose.connect("mongodb://localhost/gamesFeed", {
   useNewUrlParser: true
 });
 
@@ -33,20 +33,36 @@ mongoose.connect("mongodb://localhost/sportsFeed", {
 
 // A GET route for scraping the SBS website
 app.get("/scrape", function (req, res) {
-  axios.get("https://www.sbs.com.au/news/sport").then(function (response) {
+  axios.get("https://au.ign.com/").then(function (response) {
     var $ = cheerio.load(response.data);
 
-
-    $(".views-row .link-underlay").each(function (i, element) {
+    $("article").each(function (i, element) {
       var result = {};
 
       // Add the text and href of every link, and save them as properties of the result object
       result.title = $(this)
+        .children("div")
+        .children(".item-details")
         .children("a")
+        .children("h3")
+        .children("div")
+        .children("span")
         .text();
       result.link = $(this)
+        .children("div")
+        .children(".item-details")
         .children("a")
         .attr("href");
+      result.image = $(this)
+        .children("div")
+        .children(".item-thumbnail")
+        .children("div")
+        .children("div")
+        .children("a")
+        .children("div")
+        .children("div")
+        .children("img")
+        .attr("src");
 
       // Create a new Article using the `result` object built from scraping
       db.Article.create(result)
@@ -91,9 +107,13 @@ app.post("/articles/:id", function (req, res) {
   db.Note.create(req.body)
     .then(function (newNote) {
       console.log(newNote);
-     return db.Article.findOneAndUpdate({
+      return db.Article.findOneAndUpdate({
           _id: req.params.id
-        }, {note: newNote._id}, {new: true} ).then(function (dbArticle) {
+        }, {
+          note: newNote._id
+        }, {
+          new: true
+        }).then(function (dbArticle) {
           res.json(dbArticle);
         })
         .catch(function (err) {
