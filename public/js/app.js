@@ -2,7 +2,7 @@ $.getJSON("/articles", function(data) {
     // For each one
     for (var i = 0; i < data.length; i++) {
       // Display the apropos information on the page
-      $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "<br />" + data[i].image + "</p>");
+      $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].fullLink + "<br />" + data[i].image + "</p>");
     }
   });
   
@@ -21,7 +21,6 @@ $.getJSON("/articles", function(data) {
     })
       // With that done, add the note information to the page
       .then(function(data) {
-        console.log(data);
         // The title of the article
         $("#notes").append("<h2>" + data.title + "</h2>");
         // An input to enter a new title
@@ -60,7 +59,7 @@ $.getJSON("/articles", function(data) {
       // With that done
       .then(function(data) {
         // Log the response
-        console.log(data);
+        console.log(data.link);
         // Empty the notes section
         $("#notes").empty();
       });
@@ -69,4 +68,3 @@ $.getJSON("/articles", function(data) {
     $("#titleinput").val("");
     $("#bodyinput").val("");
   });
-  
