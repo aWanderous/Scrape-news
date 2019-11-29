@@ -1,17 +1,17 @@
 $.getJSON("/articles", function(data) {
-  for (var i = 0; i < data.length; i++) {
-    $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + "https://au.ign.com/" + data[i].link + "<br />" + data[i].image + "</p>");
-  }
+  $("#articles").empty();
+  data.forEach(function (article) {
+    $("#articles").append("<div class='card'><a href='https://au.ign.com/" + article.link + "'><div class='card-body'><h5 class='card-title'>" + article.title + "</h5></a><button type='button' class='notesBtn' data-id='" + article._id + "'>Add note</button></div>")
+  })
 });
   
-  
   // Whenever someone clicks a p tag
-  $(document).on("click", "p", function() {
+  $(document).on("click", ".notesBtn", function() {
     // Empty the notes from the note section
     $("#notes").empty();
     // Save the id from the p tag
     var thisId = $(this).attr("data-id");
-  
+    console.log(thisId)
     // Now make an ajax call for the Article
     $.ajax({
       method: "GET",

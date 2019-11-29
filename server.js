@@ -1,7 +1,7 @@
 var express = require("express");
 var logger = require("morgan");
 var mongoose = require("mongoose");
-var exphbs = require("express-handlebars");
+// var exphbs = require("express-handlebars");
 
 
 // Scraping tools
@@ -11,7 +11,7 @@ var cheerio = require("cheerio");
 // Require all models
 var db = require("./models");
 
-var PORT = 2511;
+var PORT = process.env.PORT || 2511;
 
 // Initialize Express
 var app = express();
@@ -24,6 +24,12 @@ app.use(express.urlencoded({
   extended: true
 }));
 app.use(express.json());
+
+// app.engine("handlebars", exphbs({
+//   defaultLayout: "main"
+// }));
+// app.set("view engine", "handlebars");
+
 app.use(express.static("public"));
 
 // Connect to the Mongo DB
@@ -31,13 +37,10 @@ mongoose.connect("mongodb://localhost/gamesFeed", {
   useNewUrlParser: true
 });
 
-// Routes
-app.engine("handlebars", exphbs({
-  defaultLayout: "main"
-}));
-app.set("view engine", "handlebars");
 
-// A GET route for scraping the SBS website
+// Routes
+
+// A GET route for scraping the IGN website
 app.get("/scrape", function (req, res) {
   axios.get("https://au.ign.com/").then(function (response) {
     var $ = cheerio.load(response.data);
