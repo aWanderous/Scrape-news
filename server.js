@@ -42,7 +42,8 @@ mongoose.connect("mongodb://localhost/gamesFeed", {
 
 // A GET route for scraping the IGN website
 app.get("/scrape", function (req, res) {
-  axios.get("https://au.ign.com/").then(function (response) {
+  axios.get("https://au.ign.com/")
+  .then(function (response) {
     var $ = cheerio.load(response.data);
 
     $(".content-item").each(function (i, element) {
@@ -89,7 +90,8 @@ app.get("/scrape", function (req, res) {
 
 // Route for getting all Articles from the db
 app.get("/articles", function (req, res) {
-  db.Article.find().then(function (dbArticle) {
+  db.Article.find()
+    .then(function (dbArticle) {
       res.json(dbArticle);
     })
     .catch(function (err) {
@@ -101,7 +103,8 @@ app.get("/articles", function (req, res) {
 app.get("/articles/:id", function (req, res) {
   db.Article.findOne({
       _id: req.params.id
-    }).populate("note").then(function (dbArticle) {
+    }).populate("note")
+    .then(function (dbArticle) {
 
       res.json(dbArticle);
     })
@@ -129,6 +132,18 @@ app.post("/articles/:id", function (req, res) {
           console.log(err.message);
         });
     })
+});
+
+app.get("/clear", function (req, res) {
+  db.Article.deleteMany({})
+    // db.Note.remove({})
+    .then(function () {
+      // console.log(dbArticle);
+    })
+    .catch(function (err) {
+      console.log(err.message);
+    });
+  res.send("Clear Complete");
 });
 
 // Start the server
