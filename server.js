@@ -1,6 +1,8 @@
 var express = require("express");
 var logger = require("morgan");
 var mongoose = require("mongoose");
+var exphbs = require("express-handlebars");
+
 
 // Scraping tools
 var axios = require("axios");
@@ -30,13 +32,17 @@ mongoose.connect("mongodb://localhost/gamesFeed", {
 });
 
 // Routes
+app.engine("handlebars", exphbs({
+  defaultLayout: "main"
+}));
+app.set("view engine", "handlebars");
 
 // A GET route for scraping the SBS website
 app.get("/scrape", function (req, res) {
   axios.get("https://au.ign.com/").then(function (response) {
     var $ = cheerio.load(response.data);
 
-    $("article").each(function (i, element) {
+    $(".content-item").each(function (i, element) {
       var result = {};
 
       // Add the text and href of every link, and save them as properties of the result object

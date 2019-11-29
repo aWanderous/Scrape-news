@@ -1,10 +1,8 @@
 $.getJSON("/articles", function(data) {
-    // For each one
-    for (var i = 0; i < data.length; i++) {
-      // Display the apropos information on the page
-      $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].fullLink + "<br />" + data[i].image + "</p>");
-    }
-  });
+  for (var i = 0; i < data.length; i++) {
+    $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + "https://au.ign.com/" + data[i].link + "<br />" + data[i].image + "</p>");
+  }
+});
   
   
   // Whenever someone clicks a p tag
