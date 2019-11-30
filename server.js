@@ -1,7 +1,6 @@
 var express = require("express");
 var logger = require("morgan");
 var mongoose = require("mongoose");
-// var exphbs = require("express-handlebars");
 
 
 // Scraping tools
@@ -12,7 +11,9 @@ var cheerio = require("cheerio");
 var db = require("./models");
 
 var PORT = process.env.PORT || 2511;
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines"
 
+mongoose.connect(MONGODB_URI);
 // Initialize Express
 var app = express();
 
@@ -43,49 +44,49 @@ mongoose.connect("mongodb://localhost/gamesFeed", {
 // A GET route for scraping the IGN website
 app.get("/scrape", function (req, res) {
   axios.get("https://au.ign.com/")
-  .then(function (response) {
-    var $ = cheerio.load(response.data);
+    .then(function (response) {
+      var $ = cheerio.load(response.data);
 
-    $(".content-item").each(function (i, element) {
-      var result = {};
+      $(".content-item").each(function (i, element) {
+        var result = {};
 
-      // Add the text and href of every link, and save them as properties of the result object
-      result.title = $(this)
-        .children("div")
-        .children(".item-details")
-        .children("a")
-        .children("h3")
-        .children("div")
-        .children("span")
-        .text();
-      result.link = $(this)
-        .children("div")
-        .children(".item-details")
-        .children("a")
-        .attr("href");
-      result.image = $(this)
-        .children("div")
-        .children(".item-thumbnail")
-        .children("div")
-        .children("div")
-        .children("a")
-        .children("div")
-        .children("div")
-        .children("img")
-        .attr("src");
+        // Add the text and href of every link, and save them as properties of the result object
+        result.title = $(this)
+          .children("div")
+          .children(".item-details")
+          .children("a")
+          .children("h3")
+          .children("div")
+          .children("span")
+          .text();
+        result.link = $(this)
+          .children("div")
+          .children(".item-details")
+          .children("a")
+          .attr("href");
+        result.image = $(this)
+          .children("div")
+          .children(".item-thumbnail")
+          .children("div")
+          .children("div")
+          .children("a")
+          .children("div")
+          .children("div")
+          .children("img")
+          .attr("src");
 
-      // Create a new Article using the `result` object built from scraping
-      db.Article.create(result)
-        .then(function (dbArticle) {
-          console.log(dbArticle);
-        })
-        .catch(function (err) {
-          console.log(err);
+        // Create a new Article using the `result` object built from scraping
+        db.Article.create(result)
+          .then(function (dbArticle) {
+            console.log(dbArticle);
+          })
+          .catch(function (err) {
+            console.log(err);
+          });
         });
-    });
+        res.send("Scrape Complete");
 
-    res.send("Scrape Complete");
-  });
+    });
 });
 
 // Route for getting all Articles from the db
@@ -136,14 +137,15 @@ app.post("/articles/:id", function (req, res) {
 
 app.get("/clear", function (req, res) {
   db.Article.deleteMany({})
-    // db.Note.remove({})
     .then(function () {
-      // console.log(dbArticle);
+      db.Note.deleteMany({})
+        .then(function () {
+          res.send("Clear Complete");
+        })
     })
     .catch(function (err) {
       console.log(err.message);
     });
-  res.send("Clear Complete");
 });
 
 // Start the server
