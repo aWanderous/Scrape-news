@@ -64,17 +64,7 @@ app.get("/scrape", function (req, res) {
           .children(".item-details")
           .children("a")
           .attr("href");
-        result.image = $(this)
-          .children("div")
-          .children(".item-thumbnail")
-          .children("div")
-          .children("div")
-          .children("a")
-          .children("div")
-          .children("div")
-          .children("img")
-          .attr("src");
-
+    
         // Create a new Article using the `result` object built from scraping
         db.Article.create(result)
           .then(function (dbArticle) {
