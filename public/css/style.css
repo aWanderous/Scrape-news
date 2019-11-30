@@ -1,12 +1,11 @@
 body {
-    background-color: #F2F6D0
+    background-color: lightblue
 }
 
 #wrapper {
-    width: 960px;
+    width: 1000px;
     margin-left: auto;
     margin-right: auto;
-    padding-top: 5%;
 }
 
 #articles {
@@ -18,7 +17,8 @@ body {
 
 #notes {
     float: right;
-    width: 30%;
+    width: 35%;
+    background-color: lightgreen;
 }
 
 textarea,
@@ -38,7 +38,10 @@ textarea {
     font-size: 18px;
 }
 
-.notesBtn {
-    background-color: lightskyblue;
+#articles {
+    background-color: lightyellow;
 }
 
+#saved {
+    background-color: lightpink;
+}

@@ -1,7 +1,7 @@
 $.getJSON("/articles", function (data) {
   $("#articles").empty();
   data.forEach(function (article) {
-    $("#articles").append("<div class='card'><a href='https://au.ign.com/" + article.link + "'><div class='card-body'><h5 class='card-title'>" + article.title + "</h5></a><button type='button' class='notesBtn' data-id='" + article._id + "'>Add note</button><button type='button' class='saveBtn' data-id='" + article._id + "'>Save article</button></div>")
+    $("#articles").append("<div class='card'><a href='https://au.ign.com/" + article.link + "'><div class='card-body'><h5 class='card-title'>" + article.title + "</h5></a><button type='button' class='saveBtn' data-id='" + article._id + "'>Save article</button></div>")
   })
 });
 $(document).on("click", "#scraper", function () {
