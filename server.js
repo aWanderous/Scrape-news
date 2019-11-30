@@ -126,7 +126,7 @@ app.post("/articles/:id", function (req, res) {
 });
 
 app.get("/clear", function (req, res) {
-  db.Article.deleteMany({})
+  db.Article.remove({})
     .then(function () {
       db.Note.deleteMany({})
         .then(function () {

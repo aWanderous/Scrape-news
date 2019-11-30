@@ -95,12 +95,11 @@ $(document).on("click", ".saveBtn", function () {
     // With that done, add the note information to the page
     .then(function (data) {
       console.log(data)
-      $("#saved").append("<div class='card'><a href='https://au.ign.com/" + data.link + "'><div class='card-body'><h5 class='card-title'>" + data.title + "</h5></a><button type='button' class='notesBtn' data-id='" + data._id + "'>Add note</button><button type='button' class='removeBtn' data-id='" + data._id + "'>Remove article</button></div>")
+      $("#saved").append("<div class='card' id='" + data._id + "'><a href='https://au.ign.com/" + data.link + "'><div class='card-body'><h5 class='card-title'>" + data.title + "</h5></a><button type='button' class='notesBtn' data-id='" + data._id + "'>Add note</button><button type='button' class='removeBtn' data-id='" + data._id + "'>Remove article</button></div>")
     });
 });
 $(document).on("click", ".removeBtn", function () {
   var thisId = $(this).attr("data-id");
-  console.log(thisId)
   // Now make an ajax call for the Article
   $.ajax({
       method: "GET",
@@ -108,7 +107,6 @@ $(document).on("click", ".removeBtn", function () {
     })
     // With that done, add the note information to the page
     .then(function (data) {
-      console.log(data)
-$("#saved").empty(data.id)
+      $("div").remove("#" + data._id + "")
     });
 });
